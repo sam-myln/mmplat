@@ -1,0 +1,57 @@
+// Main page template. Implements BasePage methods.
+
+{% code
+type FileListPage struct {
+Files []map[string]string
+}
+%}
+
+
+{% func (p *FileListPage) Head() %}
+<head>
+    <title>File browsing</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="../../assets/css/filelist.css">
+    <link rel="icon" href="data:,">
+</head>
+{% endfunc %}
+
+{% func (p *FileListPage) Body() %}
+{%= listFiles(p.Files) %}
+{% endfunc %}
+
+{% func val(key string, arr map[string]string) %}
+    {% if arr[key] != "" %}
+        {%s arr[key] %}
+    {% endif %}
+{% endfunc %}
+
+{% func listFiles(files []map[string]string) %}
+<table>
+    <thead>
+    <tr class="header" id="theader">
+        <th id="nameColumnHeader" tabindex=0 role="button">Name</th>
+        <th id="sizeColumnHeader" class="detailsColumn" tabindex=0 role="button">
+            Size
+        </th>
+        <th id="typeColumnHeader" class="detailsColumn" tabindex=0 role="button">
+            Type
+        </th>
+    </tr>
+    <tbody id="tbody">
+    {% for _, v := range files %}
+    <tr>
+        <td data-value="eblo_antona">
+            <a class="icon-file" draggable="true" href='{%= val("id", v) %}'>{%= val("name", v) %}</a>
+        </td>
+        <!-- TODO -h size display MB,KB,GB -->
+        <td class="detailsColumn" data-value='{%= val("size", v) %}'>{%= val("size", v) %}</td>
+        <td class="detailsColumn" data-value='{%= val("type", v) %}'>{%= val("type", v) %}</td>
+    </tr>
+    </tbody>
+    {% endfor %}
+    </thead>
+</table>
+{% endfunc %}

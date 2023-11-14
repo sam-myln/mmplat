@@ -1,0 +1,28 @@
+- tests are default
++ fasthttp is THE shit
+- config with koanf, no schema types, cause single source
+- context DE FUQ
++ incorporate lara-like middlewares pre/post request
+- ACL on transport lvl
++ represt dir as tree w/ metadata
+	+ return resource identificator specific to the representation
++ handler for each node type: 
+	-> dir - return list
+	-> MM - stream
++ handler for media streaming with bytes offset
+- error handling:
+	- for app BOOT must be logged (opt. notified via)
+	- for webserver MUST BE relayed to client when appropriate NO CRASH
+	- fatal error must be logged NO CRASH
+- there's two ways to inject dependencies"
+- either provide object directly
+OR
+- provide depenDENT class w/ dependency METHOD with will have required access
+	to underlying recources
+	
+BUG when node not found error display etc
+BUG when downloading staff replace w/ name instead of id
+		ctx.SetContentType("application/epub+zip")
+		ctx.Response.Header.Set("Content-Disposition",
+			fmt.Sprintf(`attachment; filename="%s`, node.Item().Name()),
+		)

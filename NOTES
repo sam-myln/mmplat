@@ -1,0 +1,50 @@
+I'm running the application providing necessery parameters for functionality: 
+    - folder
+    - file formats
+application's front is available via localhost:80
+at that point i have:
+    - front page with templates(maybe) to mimic folder structure and return 
+        interactable items according to type(movie, audio - playable, photo - viewable) - all downloadable
+
+first return directory listing wrapped within tree(with breadcrumps)
+second simple file return with SPECIFIC handler for media within client
+
+GET localhost:8080/{ID} - DIR
+GET localhost:8080/{ID}/{NESTED_DIR} - NESTED DIR
+GET localhost:8080/{ID}/{NESTED_DIR}/{NESTED_NESTED_DIR}
+not necessary, 
+
+
+correct implementation
+GET localhost:8080/{ID} - {FILE|DIR} will work just fine, as it interacts w/ tree internally
+    finding necessary item
+
+
+. current
+.. 1 ancestor up
+
+
+(share staff down the drain using context)
+1) Inititate directory traverser in ROOT
+2) pass instance of Tree(built) into Handler
+3) Use instance of Handler when calling Serve
+
+fmtCmdEx    = "mmplat 
+--recursive 
+--folders ... 
+[--file-formats ...] 
+[--log info|debug|error]"
+
+
+    r.GET("/", handler.Index(
+                        fstmiddleware.handle(
+                            sencondmiddleware.handle(
+                                third.handle()
+                            )
+                        )
+                    )
+                )
+1.1)
+
+handler.Group(...args, ...middlewares) =>
+    handler.Group(handler.Index, handler.Auth, corsmiddleware.handle, contenttypemiddleware.handle)

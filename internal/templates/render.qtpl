@@ -1,0 +1,156 @@
+// Main page template. Implements BasePage methods.
+{% code
+type Render struct {
+    File map[string]string
+}
+%}
+
+
+{% func (p *Render) Head() %}
+<!-- // video[path|type]string -->
+<head>
+    <!-- TODO replace w/ asset directory provided by handler or whatever -->
+    <!--  also add integrity check during application start(bootstrap) -->
+    <title>Media player</title>
+    <link rel="stylesheet" href="../../assets/videojs/video-js.css">
+    <link rel="stylesheet" href="../../assets/videojs/videojs-http-source-selector.css">
+    <link rel="stylesheet" href="../../assets/videojs/videojs.markers.css">
+    <link rel="stylesheet" href="../../assets/videojs/videojs-share.css">
+    <link rel="stylesheet" href="../../assets/videojs/videojs-vtt-thumbnails.css">
+    <link rel="stylesheet" href="../../assets/videojs/videojs-mobile-ui.css">
+    <link rel="stylesheet" href="../../assets/css/player.css">
+
+    <script src="../../assets/videojs/video.js"></script>
+    <script src="../../assets/videojs/videojs-mobile-ui.js"></script>
+    <script src="../../assets/videojs/videojs-contrib-quality-levels.js"></script>
+    <script src="../../assets/videojs/videojs-http-source-selector.js"></script>
+    <script src="../../assets/videojs/videojs-markers.js"></script>
+    <script src="../../assets/videojs/videojs-share.js"></script>
+    <script src="../../assets/videojs/videojs-vtt-thumbnails.js"></script>
+    <script src="../../assets/js/_helpers.js"></script>
+    <link rel="icon" href="data:,">
+</head>
+{% endfunc %}
+
+{% func (p *Render) Body() %}
+<a href="?nojs">no js</a><br />
+<script id="video_data" type="application/json">
+    {
+        "id": "WAr6aP7ym28",
+        "index": null,
+        "plid": null,
+        "length_seconds": null,
+        "play_next": false,
+        "next_video": "ZRLFqNX4pGk",
+        "youtube_comments_text": "View YouTube comments",
+        "reddit_comments_text": "View Reddit comments",
+        "reddit_permalink_text": "View more comments on Reddit",
+        "comments_text": "View {commentCount} comments",
+        "hide_replies_text": "Hide replies",
+        "show_replies_text": "Show replies",
+        "params": {
+            "annotations": false,
+            "autoplay": true,
+            "comments": [
+                "youtube",
+                ""
+            ],
+            "continue": false,
+            "continue_autoplay": true,
+            "controls": true,
+            "listen": false,
+            "local": false,
+            "preferred_captions": [
+                "",
+                "",
+                ""
+            ],
+            "player_style": "invidious",
+            "quality": "hd720",
+            "quality_dash": "auto",
+            "raw": false,
+            "related_videos": true,
+            "speed": 1.0,
+            "video_end": -1,
+            "video_loop": false,
+            "extend_desc": false,
+            "video_start": 0,
+            "volume": 100,
+            "vr_mode": true,
+            "save_player_pos": false
+        },
+        "preferences": {
+            "annotations": false,
+            "annotations_subscribed": false,
+            "autoplay": true,
+            "automatic_instance_redirect": false,
+            "captions": [
+                "",
+                "",
+                ""
+            ],
+            "comments": [
+                "youtube",
+                ""
+            ],
+            "continue": false,
+            "continue_autoplay": true,
+            "dark_mode": "",
+            "latest_only": false,
+            "listen": false,
+            "local": false,
+            "watch_history": false,
+            "vr_mode": true,
+            "show_nick": true,
+            "locale": "en-US",
+            "region": "US",
+            "max_results": 40,
+            "notifications_only": false,
+            "player_style": "invidious",
+            "quality": "hd720",
+            "quality_dash": "auto",
+            "default_home": "",
+            "feed_menu": [
+                "Trending",
+                "Subscriptions",
+                "Playlists"
+            ],
+            "related_videos": true,
+            "sort": "published",
+            "speed": 1.0,
+            "thin_mode": false,
+            "unseen_only": false,
+            "video_loop": false,
+            "extend_desc": false,
+            "volume": 100,
+            "save_player_pos": false
+        },
+        "premiere_timestamp": null,
+        "vr": false,
+        "projection_type": "RECTANGULAR",
+        "hmac_key": "4e5c7c498f445ca90940dd2236d19d750d7dff8c",
+        "local_disabled": false,
+        "support_reddit": true
+    }
+</script>
+<div id="player-container" class="h-box">
+    <video style="outline:none;width:100%;background-color:#000" playsinline poster="../../assets/images/cinema_image.png"
+           id="player" class="on-video_player video-js player-style-invidious"
+           autoplay
+           controls>
+        <source src='stream/{%s p.File["name"] %}' type='{%s p.File["type"] %}' hidequalityoption="true" selected="true">
+        <!-- TODO subtitles -->
+        <!-- <track kind="captions" src="/api/v1/captions/RzzDuu1IgjM?label=English (auto-generated)&hmac_key=735e9ec6ce182ad1ebcc47f1899785d098c60eb4" label="English (auto-generated)"> -->
+    </video>
+    <script id="player_data" type="application/json">
+        {
+            "aspect_ratio": "16:9",
+            "title": "",
+            "description": "",
+            "thumbnail": "",
+            "preferred_caption_found": false
+        }
+    </script>
+<script src="../../assets/js/player.js"></script>
+</div>
+{% endfunc %}

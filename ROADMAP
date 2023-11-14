@@ -1,0 +1,16 @@
+We talking about file browser, multimedia / audio streaming platform.
+
+$ mmplat --dir ./ --filetypes mp4,mp3,pdf
+
+Functionality:
+	- list files
+		- sort by: type, name
+		- search field
+	- two clients: JSON, HTTP. one api.
+	- stream multimedia type: app/mmpeg, app/mp3 etc
+- represt dir as tree w/ metadata
+	- return resource identificator specific to the representation
+- handler for each node type: 
+	-> dir - return list
+	-> MM - stream
+- handler for media streaming with bytes offset
