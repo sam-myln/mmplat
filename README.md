@@ -8,5 +8,5 @@ mmplat --bind|--addr localhost:8080 --folders dir... [-r|--recursive] [--disable
 ```
 ## Recomended usage
 ```
-mmplat --bind localhost:8080 -r --folders $HOME/videos/movies-with-family --login-data authorize_users
+mmplat --bind localhost:8080 -r --folders $HOME/videos/movies-with-family --allow-guest
 ```
