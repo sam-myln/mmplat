@@ -73,7 +73,7 @@ func (h *Handler) render(node *fs.Node, ctx *fasthttp.RequestCtx) {
 		ctx.SetBodyStream(reader, -1)
 		metadata := util.ExtToMetadata(node.Item())
 		ctx.Response.Header.Set("Content-Disposition",
-			fmt.Sprintf(`attachment; filename="%s`, node.Item().Name()),
+			fmt.Sprintf(`inline; filename="%s`, node.Item().Name()),
 		)
 		if metadata != "" {
 			ctx.SetContentType(metadata)
