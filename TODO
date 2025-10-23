@@ -1,19 +1,17 @@
-TODO
-+ !!!! pass address for binding via parameter
-
-+ add NOJS version 
-
--  ): subtitles / audio switch support (not supported for plain video files)
-
-+ TOTM lib for auth
-+ session implemented for auth
-
-+/- add two-factor switch true/false
-
-+ !!! make sure, that any application entry points are filtered thoroughly via AUTHmiddleware(token cheking)
-+ later, add redirect to login for ALL PATHS!!!!!!!!!!!
-
-- clean render template, clean JS and json block requirements (at least make it empty, instead of staff)
-
-+ add user-login multiple login file import support
-+ add EXLUSION file formats if prefixed by '-', INCLUDSION otherwise
+TODO refactor + enhancing
+- router
+- clean cmd
+- clean FE
+- basic fun-ty:
+    - simplest run command
+    - continued running
+    - cache memory cmd flag w/ quantity
+    - file upload
+    OPTIONAL:
+        - interact w/ cmd to get LIST of CURRENT PEERS
+- add proper player
+    - JS FE list support
+    - BE in-memory list crop, playlist init
+    - subtitles
+- TDD
+- BDD
