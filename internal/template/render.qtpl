@@ -1,7 +1,7 @@
 // Main page template. Implements BasePage methods.
 {% code
 type Render struct {
-    File map[string]string
+    File FileMetadata
 }
 %}
 
@@ -138,7 +138,7 @@ type Render struct {
            id="player" class="on-video_player video-js player-style-invidious"
            autoplay
            controls>
-        <source src='stream/{%s p.File["name"] %}' type='{%s p.File["type"] %}' hidequalityoption="true" selected="true">
+        <source src='stream/{%s p.File.Name %}' type='{%s p.File.Type %}' hidequalityoption="true" selected="true">
         <!-- TODO subtitles -->
         <!-- <track kind="captions" src="/api/v1/captions/RzzDuu1IgjM?label=English (auto-generated)&hmac_key=735e9ec6ce182ad1ebcc47f1899785d098c60eb4" label="English (auto-generated)"> -->
     </video>

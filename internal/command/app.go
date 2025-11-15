@@ -1,4 +1,4 @@
-package commands
+package command
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/valyala/fasthttp"
 	filesystem "mmplat/internal/filesystem"
-	"mmplat/internal/handlers"
+	handlers "mmplat/internal/handler"
 	"mmplat/internal/middleware"
 	"mmplat/internal/util"
 	"net"
@@ -29,14 +29,18 @@ func (ctx *CmdCtx) PreRunE(cmd *cobra.Command, _ []string) (err error) {
 	return
 }
 
-func (ctx *CmdCtx) AppRunE(_ *cobra.Command, _ []string) error {
+func (ctx *CmdCtx) AppRunE(_ *cobra.Command, args []string) error {
+
 	defer ctx.Cancel()
-	return ctx.run()
+	return ctx.run(args )
 }
 
-func (ctx *CmdCtx) run() error {
+func (ctx *CmdCtx) run(args []string) error {
 	cctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	defer func() {
+		ctx.log.Info("cctx cancel called.")
+		cancel()
+	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -46,9 +50,9 @@ func (ctx *CmdCtx) run() error {
 		var err error
 		var r bool
 		r, err = ctx.flags.GetBool(cmdFlagNameRecurse)
-		path := ctx.GetFlags().Args()
-		ctx.log.Info("provided Args(): " + strings.Join(path, ","))
-		if len(path) == 0 {
+
+		ctx.log.Info("provided Args(): " + strings.Join(args, ","))
+		if len(args) == 0 {
 			ctx.log.Error("Error, need to provide at least one directory")
 			cancel()
 			return errors.New("error, some required arguments are missing")
@@ -58,7 +62,7 @@ func (ctx *CmdCtx) run() error {
 		if err != nil {
 			ctx.log.Info("Flag " + cmdFlagNameFormat + " omitted, using default preset.")
 		}
-		fs, err = filesystem.NewFSWorker(r, path, fmt)
+		fs, err = filesystem.NewFSWorker(r, args, fmt)
 		if err != nil {
 			ctx.log.Error("error, cannot use root exec dir as source: " + err.Error())
 			cancel()
@@ -110,14 +114,14 @@ func (ctx *CmdCtx) run() error {
 			ctx.log.Error("serve failed: " + err.Error())
 		}
 	}()
-	ctx.log.Debug("Startup complete")
+	ctx.log.Info("Startup complete")
 	select {
 	case s := <-quit:
-		ctx.log.WithField("signal", s.String()).Debug("Shutdown initiated due to process signal")
+		ctx.log.WithField("signal", s.String()).Info("Shutdown initiated due to process signal")
 		_ = ln.Close()
 		return cctx.Err()
 	case <-cctx.Done():
-		ctx.log.Debug("Shutdown initiated due to context completion")
+		ctx.log.Info("Shutdown initiated due to context completion")
 		_ = ln.Close()
 		return nil
 	}

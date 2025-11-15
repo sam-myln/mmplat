@@ -9,4 +9,4 @@ Notably, w/ Auth, process consists of following steps:
 5. set `userVerif` redirect
 6. finally, set finalToken
 */
-package handlers
+package handler

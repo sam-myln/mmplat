@@ -3,30 +3,30 @@
 
 // Main page template. Implements BasePage methods.
 
-//line internal/templates/render.qtpl:2
-package templates
+//line internal/template/render.qtpl:2
+package template
 
-//line internal/templates/render.qtpl:2
+//line internal/template/render.qtpl:2
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line internal/templates/render.qtpl:2
+//line internal/template/render.qtpl:2
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line internal/templates/render.qtpl:3
+//line internal/template/render.qtpl:3
 type Render struct {
-	File map[string]string
+	File FileMetadata
 }
 
-//line internal/templates/render.qtpl:9
+//line internal/template/render.qtpl:9
 func (p *Render) StreamHead(qw422016 *qt422016.Writer) {
-//line internal/templates/render.qtpl:9
+//line internal/template/render.qtpl:9
 	qw422016.N().S(`
 <!-- // video[path|type]string -->
 <head>
@@ -52,38 +52,38 @@ func (p *Render) StreamHead(qw422016 *qt422016.Writer) {
     <link rel="icon" href="data:,">
 </head>
 `)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 }
 
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 func (p *Render) WriteHead(qq422016 qtio422016.Writer) {
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	p.StreamHead(qw422016)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	qt422016.ReleaseWriter(qw422016)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 }
 
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 func (p *Render) Head() string {
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	p.WriteHead(qb422016)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	qs422016 := string(qb422016.B)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 	return qs422016
-//line internal/templates/render.qtpl:33
+//line internal/template/render.qtpl:33
 }
 
-//line internal/templates/render.qtpl:35
+//line internal/template/render.qtpl:35
 func (p *Render) StreamBody(qw422016 *qt422016.Writer) {
-//line internal/templates/render.qtpl:35
+//line internal/template/render.qtpl:35
 	qw422016.N().S(`
 <a href="?nojs">no js</a><br />
 <script id="video_data" type="application/json">
@@ -191,13 +191,13 @@ func (p *Render) StreamBody(qw422016 *qt422016.Writer) {
            autoplay
            controls>
         <source src='stream/`)
-//line internal/templates/render.qtpl:141
-	qw422016.E().S(p.File["name"])
-//line internal/templates/render.qtpl:141
+//line internal/template/render.qtpl:141
+	qw422016.E().S(p.File.Name)
+//line internal/template/render.qtpl:141
 	qw422016.N().S(`' type='`)
-//line internal/templates/render.qtpl:141
-	qw422016.E().S(p.File["type"])
-//line internal/templates/render.qtpl:141
+//line internal/template/render.qtpl:141
+	qw422016.E().S(p.File.Type)
+//line internal/template/render.qtpl:141
 	qw422016.N().S(`' hidequalityoption="true" selected="true">
         <!-- TODO subtitles -->
         <!-- <track kind="captions" src="/api/v1/captions/RzzDuu1IgjM?label=English (auto-generated)&hmac_key=735e9ec6ce182ad1ebcc47f1899785d098c60eb4" label="English (auto-generated)"> -->
@@ -214,31 +214,31 @@ func (p *Render) StreamBody(qw422016 *qt422016.Writer) {
 <script src="../../assets/js/player.js"></script>
 </div>
 `)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 }
 
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 func (p *Render) WriteBody(qq422016 qtio422016.Writer) {
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	p.StreamBody(qw422016)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	qt422016.ReleaseWriter(qw422016)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 }
 
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 func (p *Render) Body() string {
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	qb422016 := qt422016.AcquireByteBuffer()
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	p.WriteBody(qb422016)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	qs422016 := string(qb422016.B)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	qt422016.ReleaseByteBuffer(qb422016)
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 	return qs422016
-//line internal/templates/render.qtpl:156
+//line internal/template/render.qtpl:156
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 	"math/rand"
-	fs "mmplat/internal/filesystem"
 	"regexp"
 	"strconv"
 	"time"
@@ -23,17 +22,7 @@ func LogStringToLevel(str string) logrus.Level {
 	}
 }
 
-// PrepareTemplateItem templ[name,size,type]
-func PrepareTemplateItem(id fs.Id, item fs.IItem) map[string]string {
-	templateItem := make(map[string]string)
-	templateItem["name"] = item.Name()
-	templateItem["size"] = strconv.Itoa(int(item.Size()))
-	templateItem["type"] = ExtToMetadata(item)
-	templateItem["id"] = strconv.Itoa(int(id))
-	// TODO obfuscate actual file behind exposed API interface
-	templateItem["path"] = item.Path()
-	return templateItem
-}
+
 
 func ValidateUserInput(input string) (validated string) {
 	var pattern = `~\.|\\|\(|\)|\{|\}~`

@@ -21,8 +21,8 @@
 go.work
 .env
 
-build
-build/*
+bin
+bin/*
 samples
 samples/*
 t

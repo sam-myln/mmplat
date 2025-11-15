@@ -2,7 +2,7 @@
 
 {% code
 type FileListPage struct {
-Files []map[string]string
+    Files []FileMetadata
 }
 %}
 
@@ -19,16 +19,10 @@ Files []map[string]string
 {% endfunc %}
 
 {% func (p *FileListPage) Body() %}
-{%= listFiles(p.Files) %}
+    {%= listFiles(p.Files) %}
 {% endfunc %}
 
-{% func val(key string, arr map[string]string) %}
-    {% if arr[key] != "" %}
-        {%s arr[key] %}
-    {% endif %}
-{% endfunc %}
-
-{% func listFiles(files []map[string]string) %}
+{% func listFiles(files []FileMetadata) %}
 <table>
     <thead>
     <tr class="header" id="theader">
@@ -44,11 +38,11 @@ Files []map[string]string
     {% for _, v := range files %}
     <tr>
         <td data-value="eblo_antona">
-            <a class="icon-file" draggable="true" href='{%= val("id", v) %}'>{%= val("name", v) %}</a>
+            <a class="icon-file" draggable="true" href='{%s v.ID %}'>{%s v.Name %}</a>
         </td>
         <!-- TODO -h size display MB,KB,GB -->
-        <td class="detailsColumn" data-value='{%= val("size", v) %}'>{%= val("size", v) %}</td>
-        <td class="detailsColumn" data-value='{%= val("type", v) %}'>{%= val("type", v) %}</td>
+        <td class="detailsColumn" data-value='{%s v.Size %}'>{%s v.Size %}</td>
+        <td class="detailsColumn" data-value='{%s v.Type %}'>{%s v.Type %}</td>
     </tr>
     </tbody>
     {% endfor %}

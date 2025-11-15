@@ -1,4 +1,4 @@
-package commands
+package command
 
 import (
 	"context"
@@ -22,6 +22,7 @@ func NewCmdCtx() *CmdCtx {
 	}
 }
 func (ctx *CmdCtx) Cancel() {
+	ctx.log.Info("ctx cancel called.")
 	if ctx.cancel != nil {
 		ctx.cancel()
 	}

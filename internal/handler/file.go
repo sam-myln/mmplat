@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"io"
 	fs "mmplat/internal/filesystem"
-	"mmplat/internal/templates"
+	"mmplat/internal/template"
 	"mmplat/internal/util"
 	"os"
 	"strconv"
@@ -19,7 +19,7 @@ import (
 
 const assetDir = "../../assets"
 
-func (h *Handler) Index(ctx *fasthttp.RequestCtx) {
+ func (h *Handler) Index(ctx *fasthttp.RequestCtx) {
 	h.index(nil, ctx)
 }
 
@@ -42,18 +42,18 @@ func (h *Handler) Item(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) index(node *fs.Node, ctx *fasthttp.RequestCtx) {
-	var files []map[string]string
+	var files []template.FileMetadata
 	var searchNode *fs.Node
 	searchNode = node
 	if node == nil {
 		searchNode = h.fs.Tree().Root()
 	}
 	for _, n := range searchNode.Children() {
-		files = append(files, util.PrepareTemplateItem(n.Id(), n.Item()))
+		files = append(files, template.PrepFileMetadata(n.Id(), n.Item()))
 	}
 
-	p := &templates.FileListPage{Files: files}
-	templates.WritePageTemplate(ctx, p)
+	p := &template.FileListPage{Files: files}
+	template.WritePageTemplate(ctx, p)
 }
 
 func (h *Handler) render(node *fs.Node, ctx *fasthttp.RequestCtx) {
@@ -63,15 +63,15 @@ func (h *Handler) render(node *fs.Node, ctx *fasthttp.RequestCtx) {
 		if err != nil {
 			fmt.Fprintf(ctx, "Error reading file")
 		}
-		file := util.PrepareTemplateItem(node.Id(), node.Item())
-		var p templates.Page
+		file := template.PrepFileMetadata(node.Id(), node.Item())
+		var p template.Page
 		// redir no js
 		if ctx.QueryArgs().Has("nojs") {
-			p = &templates.RenderNoJs{File: file}
+			p = &template.RenderNoJs{File: file}
 		} else {
-			p = &templates.Render{File: file}
+			p = &template.Render{File: file}
 		}
-		templates.WritePageTemplate(ctx, p)
+		template.WritePageTemplate(ctx, p)
 	} else {
 		ctx.SetBodyStream(reader, -1)
 		metadata := util.ExtToMetadata(node.Item())

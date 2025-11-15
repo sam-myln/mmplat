@@ -1,12 +1,12 @@
 package main
 
 import (
-	"mmplat/internal/commands"
+	"mmplat/internal/command"
 	"os"
 )
 
 func main() {
-	if err := commands.NewAppCmd().Execute(); err != nil {
+	if err := command.NewAppCmd().Execute(); err != nil {
 		os.Exit(1)
 	}
 }

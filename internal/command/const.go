@@ -1,4 +1,4 @@
-package commands
+package command
 
 const (
 	fmtCmdShort = "mmplat %s"

@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 )
 
 type Handler struct {
-	fs          *fs.FSWorker
-	router      *router.Router
-	routes      map[string]HandlerFn
-	optional    map[string]HandlerFn
-	middlewares map[string][]MiddlewareFn
+	fs         *fs.FSWorker
+	router     *router.Router
+	routes     map[string]HandlerFn
+	optional   map[string]HandlerFn
+	middleware map[string][]MiddlewareFn
 }
 
 type HandlerFn func(ctx *fasthttp.RequestCtx)
@@ -32,7 +32,7 @@ func (h *Handler) Fs() *fs.FSWorker {
 }
 
 // Handle reroutes request to concrete handler
-// appends registered middlewares
+// appends registered middleware
 func (h *Handler) Handle(ctx *fasthttp.RequestCtx) {
 	path := string(ctx.Path())
 	pos := strings.LastIndex(path, "/")
@@ -58,16 +58,16 @@ func (h *Handler) Handle(ctx *fasthttp.RequestCtx) {
 		}
 	}
 	if route != nil {
-		if h.middlewares[path] != nil && len(h.middlewares[path]) > 0 {
-			for _, v := range h.middlewares[path] {
-				if err := v(ctx); err != nil {
-					// Walk the middlewares stack, call each on context of request
-					fmt.Fprintf(ctx, "%v", err)
+		if h.middleware[path] != nil && len(h.middleware[path]) > 0 {
+			for _, itMiddleware := range h.middleware[path] {
+				// Walk the middleware stack, call each on context of request
+				if err := itMiddleware(ctx); err != nil {
+					_, _ = fmt.Fprintf(ctx, "%v", err)
 					return
 				}
 			}
 		}
-		// Call actual hadnle
+		// Call actual handle
 		route(ctx)
 	}
 }
@@ -90,7 +90,7 @@ func (h *Handler) Register(r *router.Router, method, path string, fn HandlerFn, 
 	}
 	if len(mfn) > 0 {
 		for _, middleware := range mfn {
-			h.middlewares[path] = append(h.middlewares[path], middleware)
+			h.middleware[path] = append(h.middleware[path], middleware)
 		}
 	}
 }
@@ -117,16 +117,16 @@ outer:
 				}
 			}
 		}
-		h.middlewares[path] = append(h.middlewares[path], mfn)
+		h.middleware[path] = append(h.middleware[path], mfn)
 	}
 }
 
 func (h *Handler) InternalServerError(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Internal server error")
+	_, _ = fmt.Fprintf(ctx, "Internal server error")
 }
 
 func (h *Handler) NotFound(ctx *fasthttp.RequestCtx) {
-	// TODO can create cutsome errorpage.qpl w/ title etc
-	fmt.Fprintf(ctx, "Page %s wasn't found", append(ctx.Host(), ctx.RequestURI()...))
+	// TODO can create custom errorpage.qpl w/ title etc
+	_, _ = fmt.Fprintf(ctx, "Page %s wasn't found", append(ctx.Host(), ctx.RequestURI()...))
 	ctx.SetStatusCode(fasthttp.StatusNotFound)
 }
