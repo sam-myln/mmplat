@@ -1,6 +1,8 @@
 package fs
 
 import (
+	"errors"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
@@ -68,6 +70,7 @@ type FSWorker struct {
 func NewFSWorker(recurse bool,
 	dirs []string,
 	fmts []string,
+	logger *logrus.Logger,
 ) (*FSWorker, error) {
 	var afmts []string
 	var arecurse bool
@@ -83,10 +86,20 @@ func NewFSWorker(recurse bool,
 		if err != nil {
 			panic(err)
 		}
-		exRoot := filepath.Dir(ex)
+		exRoot, err := filepath.Abs(filepath.Dir(ex))
+		if err != nil {
+			return nil, err
+		}
+		logger.Info("exec: "+ex)
+		logger.Info("exec Root: "+exRoot)
 		for _, path := range dirs {
-			if path == exRoot {
-				panic("forbidden path: matches executable root")
+			path, err = filepath.Abs(path)
+			if err != nil {
+				return nil, err
+			}
+			logger.Info("iter dir: "+path)
+			if path != exRoot {
+				return nil, errors.New("forbidden path: only executable root allowed")
 			}
 		}
 	}

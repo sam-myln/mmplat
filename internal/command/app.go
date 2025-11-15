@@ -62,9 +62,9 @@ func (ctx *CmdCtx) run(args []string) error {
 		if err != nil {
 			ctx.log.Info("Flag " + cmdFlagNameFormat + " omitted, using default preset.")
 		}
-		fs, err = filesystem.NewFSWorker(r, args, fmt)
+		fs, err = filesystem.NewFSWorker(r, args, fmt, ctx.log)
 		if err != nil {
-			ctx.log.Error("error, cannot use root exec dir as source: " + err.Error())
+			ctx.log.Error("failed initializing FSWorker: " + err.Error())
 			cancel()
 			return err
 		}
