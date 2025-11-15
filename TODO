@@ -1,15 +1,15 @@
 TODO refactor + enhancing
 - router
-- clean cmd
++ clean cmd
 - clean FE
 - basic fun-ty:
-    - simplest run command
-    - continued running
-    - cache memory cmd flag w/ quantity
-    - file upload
+    + simplest run command
+    - continued running !
+    - cache memory cmd flag w/ quantity !!
+    - file upload (online update with tree recreate) !!!
     OPTIONAL:
         - interact w/ cmd to get LIST of CURRENT PEERS
-- add proper player
+- add proper player (playlist based)
     - JS FE list support
     - BE in-memory list crop, playlist init
     - subtitles

@@ -11,9 +11,6 @@ import (
 	"strings"
 )
 
-// AssetDir TODO here is not cool
-var AssetDir string
-
 type Handler struct {
 	fs          *fs.FSWorker
 	router      *router.Router
@@ -133,4 +130,3 @@ func (h *Handler) NotFound(ctx *fasthttp.RequestCtx) {
 	fmt.Fprintf(ctx, "Page %s wasn't found", append(ctx.Host(), ctx.RequestURI()...))
 	ctx.SetStatusCode(fasthttp.StatusNotFound)
 }
-

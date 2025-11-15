@@ -13,27 +13,32 @@ type CobraRunECmd func(cmd *cobra.Command, args []string) (err error)
 
 // NewCmdCtx returns a new CmdCtx.
 func NewCmdCtx() *CmdCtx {
-	ctx := context.Background()
+	ctx, c := context.WithCancel(context.Background())
 
 	return &CmdCtx{
 		Context: ctx,
-		log:     logging.Logger(),
+		cancel:  c,
+		log:     logging.NewLogger(),
+	}
+}
+func (ctx *CmdCtx) Cancel() {
+	if ctx.cancel != nil {
+		ctx.cancel()
 	}
 }
 
 // CmdCtx app context
 type CmdCtx struct {
 	context.Context
-
+	cancel context.CancelFunc
 	flags *pflag.FlagSet
 	log *logrus.Logger
 }
 
-func (ctx* CmdCtx) SetFlags(flags *pflag.FlagSet) {
+func (ctx *CmdCtx) SetFlags(flags *pflag.FlagSet) {
 	ctx.flags = flags
 }
 
-func (ctx* CmdCtx) GetFlags() *pflag.FlagSet {
+func (ctx *CmdCtx) GetFlags() *pflag.FlagSet {
 	return ctx.flags
 }
-

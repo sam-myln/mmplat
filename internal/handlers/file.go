@@ -16,6 +16,9 @@ import (
 // Index basically, handler for inode/directory
 // URL/{ID}/{ID}
 // TODO implement that thing above + plus breadcrumbs(or .. in workdir tree)
+
+const assetDir = "../../assets"
+
 func (h *Handler) Index(ctx *fasthttp.RequestCtx) {
 	h.index(nil, ctx)
 }
@@ -84,7 +87,7 @@ func (h *Handler) render(node *fs.Node, ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) FaviconPieceOfShit(ctx *fasthttp.RequestCtx) {
-	asset := AssetDir + "/" + "img/favicon.ico"
+	asset := assetDir + "/" + "img/favicon.ico"
 	file, err := os.Open(asset)
 	if err != nil {
 		h.NotFound(ctx)
@@ -93,7 +96,7 @@ func (h *Handler) FaviconPieceOfShit(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handler) Asset(ctx *fasthttp.RequestCtx) {
-	asset := AssetDir + "/" + util.ValidateUserInput(ctx.UserValue("asset").(string))
+	asset := assetDir + "/" + util.ValidateUserInput(ctx.UserValue("asset").(string))
 	var file *os.File
 	var err error
 	file, err = os.Open(asset)

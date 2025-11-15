@@ -2,8 +2,6 @@ package exceptions
 
 import "fmt"
 
-var MiddlewareFatal = &MiddlewareFatalError{}
-
 type MiddlewareFatalError struct {
 	desc string
 }

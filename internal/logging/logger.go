@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// Logger returns the standard logrus logger.
-func Logger() (logger *logrus.Logger) {
+// NewLogger returns the standard logrus logger.
+func NewLogger() (logger *logrus.Logger) {
 	logger = &logrus.Logger{
 		Out:          os.Stderr,
 		Formatter:    &logrus.TextFormatter{
@@ -23,5 +23,4 @@ func Logger() (logger *logrus.Logger) {
 	}
 	return
 }
-
 

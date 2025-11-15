@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/fasthttp/router v1.4.21
 	github.com/fasthttp/session/v2 v2.4.13
-	github.com/pquerna/otp v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
@@ -16,7 +15,6 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
-	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect

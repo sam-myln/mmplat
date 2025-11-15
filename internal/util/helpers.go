@@ -12,16 +12,15 @@ import (
 	"unsafe"
 )
 
-func LogStringToLevel(str string, e error) logrus.Level {
+func LogStringToLevel(str string) logrus.Level {
 	switch str {
-	case "info":
-		return logrus.InfoLevel
-	case "error":
-		return logrus.ErrorLevel
-	case "debug":
-		return logrus.DebugLevel
+		case "info":
+			return logrus.InfoLevel
+		case "debug":
+			return logrus.DebugLevel
+		default:
+			return logrus.ErrorLevel
 	}
-	panic(e)
 }
 
 // PrepareTemplateItem templ[name,size,type]

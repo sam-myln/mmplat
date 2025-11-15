@@ -68,7 +68,7 @@ type FSWorker struct {
 func NewFSWorker(recurse bool,
 	dirs []string,
 	fmts []string,
-) *FSWorker {
+) (*FSWorker, error) {
 	var afmts []string
 	var arecurse bool
 	var adirs []string
@@ -77,19 +77,31 @@ func NewFSWorker(recurse bool,
 		afmts = []string{"*"}
 	}
 	arecurse = recurse
-	adirs = dirs
-	if len(dirs) == 0 {
-		adirs = []string{"./"}
+
+	if len(dirs) != 0 {
+		ex, err := os.Executable()
+		if err != nil {
+			panic(err)
+		}
+		exRoot := filepath.Dir(ex)
+		for _, path := range dirs {
+			if path == exRoot {
+				panic("forbidden path: matches executable root")
+			}
+		}
 	}
+
+	adirs = dirs
+
 	return &FSWorker{
 		arecurse,
 		afmts,
 		adirs,
 		NewTree(),
-	}
+	}, nil
 }
 
-func (fs *FSWorker) Withfmts(fmts ...string) *FSWorker {
+func (fs *FSWorker) WithFmts(fmts ...string) *FSWorker {
 	fs.fmts = append(fs.fmts, fmts...)
 	return fs
 }
@@ -206,7 +218,7 @@ func (fs *FSWorker) Tree() *Tree {
 	return fs.tree
 }
 
-//FilterFormat if preceded by - excludes, includes otherwise
+// FilterFormat if preceded by - excludes, includes otherwise
 func (fs *FSWorker) FilterFormat(path string) bool {
 	if len(fs.fmts) == 1 && fs.fmts[0] == `*` {
 		return true
@@ -216,5 +228,5 @@ func (fs *FSWorker) FilterFormat(path string) bool {
 		ext = ext[1:]
 	}
 	idx := slices.Index(fs.fmts, ext)
-	return idx != -1 &&	!strings.Contains(fs.fmts[idx], "-")
+	return idx != -1 && !strings.Contains(fs.fmts[idx], "-")
 }

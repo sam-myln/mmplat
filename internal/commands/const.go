@@ -2,26 +2,27 @@ package commands
 
 const (
 	fmtCmdShort = "mmplat %s"
+	fmtCmdUse = "mmplat [flags] [PATH...]"
 	fmtCmdLong  = `mmplat %s
 Multimedia platform for file sharing and content streaming
 `
-	fmtCmdEx    = `mmplat --bind|--addr localhost:8080 --folders dir... [-r|--recursive] [--two-factor false] 
-[--file-formats formats...] [--log info|debug|error] [--login-data files...]`
+	fmtCmdEx = `
+mmplat --test
+mmplat --test -r dir1 dir2
+mmplat --port 8080 -r --file-formats txt,json
+mmplat --log-level debug media
+`
 
-	cmdFlagNameFolders = "folders"
-	cmdFlagNameFormats = "file-formats"
+
 	cmdFlagNameLogLevel = "log"
-	cmdFlagNameRecursive = "recursive"
-	cmdFlagNameRecursiveShort = "r"
-	cmdFlagNameAddrAddress = "addr"
-	cmdFlagNameBindAddress = "bind"
-	cmdFlagNameAllowGuest = "allow-guest"
-	cmdFlagNameLoginData = "login-data"
+	cmdFlagNameFormat   = "format"
+	cmdFlagNamePort     = "port"
+	cmdFlagNameRecurse  = "recursive"
+	cmdFlagNameTest     = "test"
 
-	cmdFlagNamePredefinedVideo = "mp4,mkv,avi,ts"
-	cmdFlagNamePredefinedAudio = "mp3,flc"
-	cmdFlagNameLogLevelDefault = "error"
-	cmdFlagNameBindAddressDefault = "localhost:8080"
+	cmdFlagValuePredefinedVideo = "mp4,mkv,avi,ts"
+	cmdFlagValuePredefinedAudio = "mp3,flc,flac,aac"
+	cmdFlagValueBindPortDefault = ":8080"
 
-	version = "1.0"
+	version = "1.1"
 )
