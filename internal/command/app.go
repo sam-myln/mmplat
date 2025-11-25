@@ -36,7 +36,8 @@ func (ctx *CmdCtx) AppRunE(_ *cobra.Command, args []string) error {
 }
 
 func (ctx *CmdCtx) run(args []string) error {
-	cctx, cancel := context.WithCancel(ctx)
+	wrappterCtx, cancel := context.WithCancel(ctx)
+	cctx := context.WithValue(wrappterCtx, "logger", ctx.Logger())
 	defer func() {
 		ctx.log.Info("cctx cancel called.")
 		cancel()
@@ -80,6 +81,7 @@ func (ctx *CmdCtx) run(args []string) error {
 	handler := handlers.NewHandler(fs, r)
 	r.NotFound = handler.NotFound
 	handler.Register(r, "GET", "/", handler.Index, middleware.ContentTypeHtmlMiddleware)
+	handler.Register(r, "POST", "/upload", handler.Upload, middleware.ContentTypeHtmlMiddlewareRedirect)
 	handler.Register(r, "GET", "/favicon.ico", handler.FaviconPieceOfShit) // whatever TF that is
 	handler.Register(r, "GET", "/{item:[0-9]{1,3}}", handler.Item, middleware.ContentTypeHtmlMiddleware)
 	handler.Register(r, "GET", "/assets/{asset:*}", handler.Asset)

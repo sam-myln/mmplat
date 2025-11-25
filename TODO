@@ -6,13 +6,15 @@ TODO refactor + enhancing
     + simplest run command
     - continued running !
     - cache memory cmd flag w/ quantity !!
-    - file upload (online update with tree recreate) !!!
+    + file upload (online update with tree recreate) !!!
+    			(no recreate(wtf) only update/append)
     OPTIONAL:
         - interact w/ cmd to get LIST of CURRENT PEERS
 - add proper player (playlist based)
     - JS FE list support
     - BE in-memory list crop, playlist init
     - subtitles
-    
-- TDD(fucki this shit)
-- BDD(fuck this shit)
+- fun-ty flow:
+	+ restrict to ./*
+	+ allow uploads, in run updates(ONLY in memory)
+- 

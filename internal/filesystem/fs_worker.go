@@ -1,14 +1,18 @@
 package fs
 
 import (
+	"bytes"
+	"container/list"
 	"errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/exp/slices"
 	"io"
 	"io/fs"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -24,13 +28,14 @@ type IItem interface {
 	Name() string
 	Size() int64
 	IsDir() bool
-	Reader() (io.ReadSeekCloser, error)
+	Reader() (io.ReadSeeker, error)
 }
 
 type Item struct {
 	path     string
 	fileInfo os.FileInfo
 	metadata string
+	buf []byte
 }
 
 func (item *Item) Path() string {
@@ -39,6 +44,10 @@ func (item *Item) Path() string {
 
 func (item *Item) Metadata() string {
 	return item.metadata
+}
+
+func (item *Item) GetBytes() []byte {
+	return item.buf
 }
 
 // Name basename
@@ -55,7 +64,11 @@ func (item *Item) IsDir() bool {
 }
 
 // Reader closed by caller
-func (item *Item) Reader() (io.ReadSeekCloser, error) {
+// added switch for inmemory handling
+func (item *Item) Reader() (io.ReadSeeker, error) {
+	if item.path == "" {
+		return bytes.NewReader(item.buf), nil
+	}
 	return os.Open(item.path)
 }
 
@@ -90,14 +103,14 @@ func NewFSWorker(recurse bool,
 		if err != nil {
 			return nil, err
 		}
-		logger.Info("exec: "+ex)
-		logger.Info("exec Root: "+exRoot)
+		logger.Info("exec: " + ex)
+		logger.Info("exec Root: " + exRoot)
 		for _, path := range dirs {
 			path, err = filepath.Abs(path)
 			if err != nil {
 				return nil, err
 			}
-			logger.Info("iter dir: "+path)
+			logger.Info("iter dir: " + path)
 			if path != exRoot {
 				return nil, errors.New("forbidden path: only executable root allowed")
 			}
@@ -130,8 +143,8 @@ func (fs *FSWorker) WithRecurse(r bool) *FSWorker {
 }
 
 // BuildTree dir - directory, ext - permitted extensions
-//
-//	do NOT follow symlnix or go lower than root
+//  fills VIRUTAL tree, with scrambled naming/pathing
+//	do NOT follow symlink or go lower than root
 //
 // use stat + base
 // root item has Null IItem
@@ -242,4 +255,60 @@ func (fs *FSWorker) FilterFormat(path string) bool {
 	}
 	idx := slices.Index(fs.fmts, ext)
 	return idx != -1 && !strings.Contains(fs.fmts[idx], "-")
+}
+
+func CreateInMemoryItem(file *multipart.FileHeader) (*Item, error) {
+	var e error
+
+	src, _ := file.Open()
+	defer src.Close()
+
+	var buf bytes.Buffer
+	io.Copy(&buf, src)
+	item := &Item{
+		path: "",
+		//fileInfo: file.Header,
+		metadata: http.DetectContentType(buf.Bytes()),
+	}
+
+	return item, e
+}
+
+func CreateInMemoryItemT(file *multipart.FileHeader) (*Item, error) {
+	var safeName = regexp.MustCompile(`[^a-zA-Z0-9._-]`).ReplaceAllString(file.Filename, "_")
+	name := filepath.Base(safeName)
+	tmp, _ := os.CreateTemp("", name)
+	defer os.Remove(tmp.Name())
+
+	src, _ := file.Open()
+	io.Copy(tmp, src)
+	src.Close()
+
+	fileInfo, _ := tmp.Stat()
+
+	tmp.Seek(0, 0)
+	var buf bytes.Buffer
+	io.Copy(&buf, tmp)
+	item := &Item{
+		path: "",
+		fileInfo: fileInfo,
+		metadata: http.DetectContentType(buf.Bytes()),
+		buf: append([]byte(nil), buf.Bytes()...),
+	}
+	return item, nil
+}
+
+func (fs *FSWorker) AppendUpload(file *multipart.FileHeader)  {
+	var item IItem
+	item, _ = CreateInMemoryItemT(file)
+	node := &Node{
+		id:       NextId(),
+		type_:    File,
+		item:     item,
+		children: list.New(),
+		parent:   fs.tree.Root(),
+	}
+
+	fs.tree.Root().Add(node)
+
 }

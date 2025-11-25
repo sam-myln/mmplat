@@ -71,44 +71,48 @@ func (p *FileListPage) Head() string {
 func (p *FileListPage) StreamBody(qw422016 *qt422016.Writer) {
 //line internal/template/filelist.qtpl:21
 	qw422016.N().S(`
+<form method="post" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
     `)
-//line internal/template/filelist.qtpl:22
+//line internal/template/filelist.qtpl:26
 	streamlistFiles(qw422016, p.Files)
-//line internal/template/filelist.qtpl:22
+//line internal/template/filelist.qtpl:26
 	qw422016.N().S(`
 `)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 }
 
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 func (p *FileListPage) WriteBody(qq422016 qtio422016.Writer) {
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	p.StreamBody(qw422016)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	qt422016.ReleaseWriter(qw422016)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 }
 
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 func (p *FileListPage) Body() string {
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	qb422016 := qt422016.AcquireByteBuffer()
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	p.WriteBody(qb422016)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	qs422016 := string(qb422016.B)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	qt422016.ReleaseByteBuffer(qb422016)
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 	return qs422016
-//line internal/template/filelist.qtpl:23
+//line internal/template/filelist.qtpl:27
 }
 
-//line internal/template/filelist.qtpl:25
+//line internal/template/filelist.qtpl:28
 func streamlistFiles(qw422016 *qt422016.Writer, files []FileMetadata) {
-//line internal/template/filelist.qtpl:25
+//line internal/template/filelist.qtpl:28
 	qw422016.N().S(`
 <table>
     <thead>
@@ -123,76 +127,76 @@ func streamlistFiles(qw422016 *qt422016.Writer, files []FileMetadata) {
     </tr>
     <tbody id="tbody">
     `)
-//line internal/template/filelist.qtpl:38
+//line internal/template/filelist.qtpl:41
 	for _, v := range files {
-//line internal/template/filelist.qtpl:38
+//line internal/template/filelist.qtpl:41
 		qw422016.N().S(`
     <tr>
         <td data-value="eblo_antona">
             <a class="icon-file" draggable="true" href='`)
-//line internal/template/filelist.qtpl:41
+//line internal/template/filelist.qtpl:44
 		qw422016.E().S(v.ID)
-//line internal/template/filelist.qtpl:41
+//line internal/template/filelist.qtpl:44
 		qw422016.N().S(`'>`)
-//line internal/template/filelist.qtpl:41
+//line internal/template/filelist.qtpl:44
 		qw422016.E().S(v.Name)
-//line internal/template/filelist.qtpl:41
+//line internal/template/filelist.qtpl:44
 		qw422016.N().S(`</a>
         </td>
         <!-- TODO -h size display MB,KB,GB -->
         <td class="detailsColumn" data-value='`)
-//line internal/template/filelist.qtpl:44
+//line internal/template/filelist.qtpl:47
 		qw422016.E().S(v.Size)
-//line internal/template/filelist.qtpl:44
+//line internal/template/filelist.qtpl:47
 		qw422016.N().S(`'>`)
-//line internal/template/filelist.qtpl:44
+//line internal/template/filelist.qtpl:47
 		qw422016.E().S(v.Size)
-//line internal/template/filelist.qtpl:44
+//line internal/template/filelist.qtpl:47
 		qw422016.N().S(`</td>
         <td class="detailsColumn" data-value='`)
-//line internal/template/filelist.qtpl:45
+//line internal/template/filelist.qtpl:48
 		qw422016.E().S(v.Type)
-//line internal/template/filelist.qtpl:45
+//line internal/template/filelist.qtpl:48
 		qw422016.N().S(`'>`)
-//line internal/template/filelist.qtpl:45
+//line internal/template/filelist.qtpl:48
 		qw422016.E().S(v.Type)
-//line internal/template/filelist.qtpl:45
+//line internal/template/filelist.qtpl:48
 		qw422016.N().S(`</td>
     </tr>
     </tbody>
     `)
-//line internal/template/filelist.qtpl:48
+//line internal/template/filelist.qtpl:51
 	}
-//line internal/template/filelist.qtpl:48
+//line internal/template/filelist.qtpl:51
 	qw422016.N().S(`
     </thead>
 </table>
 `)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 }
 
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 func writelistFiles(qq422016 qtio422016.Writer, files []FileMetadata) {
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	streamlistFiles(qw422016, files)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	qt422016.ReleaseWriter(qw422016)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 }
 
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 func listFiles(files []FileMetadata) string {
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	qb422016 := qt422016.AcquireByteBuffer()
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	writelistFiles(qb422016, files)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	qs422016 := string(qb422016.B)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	qt422016.ReleaseByteBuffer(qb422016)
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 	return qs422016
-//line internal/template/filelist.qtpl:51
+//line internal/template/filelist.qtpl:54
 }

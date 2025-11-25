@@ -19,9 +19,12 @@ type FileListPage struct {
 {% endfunc %}
 
 {% func (p *FileListPage) Body() %}
+<form method="post" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
     {%= listFiles(p.Files) %}
 {% endfunc %}
-
 {% func listFiles(files []FileMetadata) %}
 <table>
     <thead>

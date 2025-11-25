@@ -32,8 +32,8 @@ func (ctx *CmdCtx) Cancel() {
 type CmdCtx struct {
 	context.Context
 	cancel context.CancelFunc
-	flags *pflag.FlagSet
-	log *logrus.Logger
+	flags  *pflag.FlagSet
+	log    *logrus.Logger
 }
 
 func (ctx *CmdCtx) SetFlags(flags *pflag.FlagSet) {
@@ -42,4 +42,8 @@ func (ctx *CmdCtx) SetFlags(flags *pflag.FlagSet) {
 
 func (ctx *CmdCtx) GetFlags() *pflag.FlagSet {
 	return ctx.flags
+}
+
+func (ctx *CmdCtx) Logger() *logrus.Logger {
+	return ctx.log
 }

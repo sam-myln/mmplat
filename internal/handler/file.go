@@ -19,7 +19,7 @@ import (
 
 const assetDir = "../../assets"
 
- func (h *Handler) Index(ctx *fasthttp.RequestCtx) {
+func (h *Handler) Index(ctx *fasthttp.RequestCtx) {
 	h.index(nil, ctx)
 }
 
@@ -112,6 +112,26 @@ func (h *Handler) Asset(ctx *fasthttp.RequestCtx) {
 	ctx.SetBodyStream(file, -1)
 }
 
+func (h *Handler) Upload(ctx *fasthttp.RequestCtx) {
+	upload, err := ctx.FormFile("file")
+	if err != nil {
+		fmt.Printf("\nupload failed:" + err.Error())
+		ctx.Redirect("/", fasthttp.StatusSeeOther)
+		//ctx.Response.
+		h.index(nil, ctx)
+		return
+	}
+	fmt.Printf("\nupload data: \nuri: %s\nmethod: %s\nlength: %s\ntype: %s\nremote: %s\n", ctx.Request.URI(),
+		ctx.Method(),
+		ctx.Request.Header.ContentLength(),
+		ctx.Request.Header.ContentType(),
+		ctx.RemoteAddr())
+
+	h.Fs().AppendUpload(upload)
+	ctx.Redirect("/", fasthttp.StatusFound)
+	h.index(nil, ctx)
+}
+
 // Stream separte function to stream using filename as asource
 func (h *Handler) Stream(ctx *fasthttp.RequestCtx) {
 	tree := h.fs.Tree()
@@ -145,7 +165,9 @@ func ContentChunk(node *fs.Node, offset int) ([]byte, int) {
 	buf := new(bytes.Buffer)
 	temp := make([]byte, 2*12)
 	if err == nil {
-		defer file.Close()
+		if closer, ok := file.(io.Closer); ok {
+			defer closer.Close()
+		}
 		_, err := file.Seek(int64(offset), 0)
 		if err == nil {
 			var l int

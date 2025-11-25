@@ -9,3 +9,8 @@ func ContentTypeHtmlMiddleware(ctx *fasthttp.RequestCtx) error {
 	return nil
 }
 
+func ContentTypeHtmlMiddlewareRedirect(ctx *fasthttp.RequestCtx) error {
+	ctx.SetContentType("text/html; charset=utf-8")
+	ctx.Response.Header.Set("Location", "/")
+	return nil
+}

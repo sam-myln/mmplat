@@ -2,6 +2,7 @@ package fs
 
 import (
 	"container/list"
+	"errors"
 )
 
 type Type int8
@@ -23,6 +24,8 @@ func NextId() Id {
 type Tree struct {
 	root *Node
 }
+
+type PrintFn func(node *Node)
 
 func NewTree() *Tree {
 	root := NewRoot(Dir, "./")
@@ -188,8 +191,14 @@ func (tree *Tree) LWalk(node *Node, fn WalkFn) error {
 
 func (tree *Tree) LWalkLvl(node *Node, fn WalkFn, lvl int8) error {
 	// including top level root
+	// failsafe
+	fallOutCounter := 1000
 	if lvl >= 0 {
 		lvl--
+		fallOutCounter--
+		if fallOutCounter <= 0 {
+			return errors.New("program recursion limit reached, smth went wrong")
+		}
 		if !node.IsLeaf() {
 			for n := node.children.Front(); n != nil; n = n.Next() {
 				iter := n.Value.(*Node)
@@ -236,3 +245,4 @@ func (node *Node) PathTrace(traceTo *Node, path string) string {
 	}
 	return path
 }
+
