@@ -13,7 +13,6 @@ func NewAppCmd() *cobra.Command {
 		Use:               fmtCmdUse,
 		Short:             fmt.Sprintf(fmtCmdShort, version),
 		Long:              fmt.Sprintf(fmtCmdLong, version),
-		Example:           fmtCmdEx,
 		Version:           version,
 		Args:              cobra.MinimumNArgs(1),
 		PreRunE:           ctx.PreRunE,
@@ -32,8 +31,8 @@ func NewAppCmd() *cobra.Command {
 
 	cmd.PersistentFlags().BoolP(cmdFlagNameRecurse, "r", false, "process directories recursively")
 
-	cmd.PersistentFlags().StringP(
-		cmdFlagNameTest, "t", "test", "Run in localhost",
+	cmd.PersistentFlags().BoolP(
+		cmdFlagNameTest, "t", false, "Run in localhost",
 	)
 
 	cmd.PersistentFlags().StringP(

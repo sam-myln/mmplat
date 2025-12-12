@@ -32,7 +32,7 @@ func (ctx *CmdCtx) PreRunE(cmd *cobra.Command, _ []string) (err error) {
 func (ctx *CmdCtx) AppRunE(_ *cobra.Command, args []string) error {
 
 	defer ctx.Cancel()
-	return ctx.run(args )
+	return ctx.run(args)
 }
 
 func (ctx *CmdCtx) run(args []string) error {
@@ -89,12 +89,24 @@ func (ctx *CmdCtx) run(args []string) error {
 	handler.Register(r, "GET", "/stream/{name}", handler.Stream)
 
 	port, _ := ctx.flags.GetString(cmdFlagNamePort)
-	_, err = ctx.flags.GetString(cmdFlagNameTest)
+	t, err := ctx.flags.GetBool(cmdFlagNameTest)
 	var ln net.Listener
-	if err != nil {
+	if err == nil && t {
+		ctx.log.Infof("binding to localhost")
+		if strings.Contains(port, ":") {
+			ctx.log.Errorf("Error, --test is incompatible with this port format")
+			cancel()
+			return errors.New("error, --test is incompatible with this port format")
+		}
 		ln, err = new(net.ListenConfig).Listen(cctx, "tcp", "localhost:"+port)
 	} else {
-		ln, err = new(net.ListenConfig).Listen(cctx, "tcp", ":"+port)
+		ctx.log.Infof("binding to iface: %v", err)
+
+		if strings.Contains(port, ":") {
+			ln, err = new(net.ListenConfig).Listen(cctx, "tcp", port)
+		} else {
+			ln, err = new(net.ListenConfig).Listen(cctx, "tcp", ":"+port)
+		}
 	}
 	ctx.log.Infof("init done, listening on :%s", port)
 	if err != nil {
@@ -108,9 +120,15 @@ func (ctx *CmdCtx) run(args []string) error {
 
 	// workerpool:185 race condition?
 	// racecondition occurs earlier, server.go:1786
+	server := &fasthttp.Server{
+		Handler:            r.Handler,
+		MaxRequestBodySize: 100 << 20, // 100MB (100 * 1024 * 1024)
+		ReadBufferSize:     1 << 20,   // 1MB (1024 * 1024)
+		WriteBufferSize:    1 << 20,   // 1MB
+	}
 	go func() {
 		err := func() error {
-			return fasthttp.Serve(ln, r.Handler)
+			return server.Serve(ln)
 		}()
 		if err != nil {
 			ctx.log.Error("serve failed: " + err.Error())

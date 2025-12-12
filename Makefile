@@ -23,6 +23,8 @@ build: ## Build binaries, default location $(pwd)/build
 	mkdir -p bin
 	go build -buildvcs=false -o ./bin/mmplat ./cmd/main.go
 .PHONY: build
+build-win: ## Build for windows, release
+	mkdir -p bin
+	GOOS=windows GOARCH=amd64 go build -buildvcs=false -ldflags="-s -w -extldflags=-static" -trimpath -a -o ./bin/mmplat.exe ./cmd/main.go
 qtc: ## Compile templates, default in ./internal/template
 	qtc ./internal/template
-

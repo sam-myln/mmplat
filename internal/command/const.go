@@ -6,12 +6,6 @@ const (
 	fmtCmdLong  = `mmplat %s
 Multimedia platform for file sharing and content streaming
 `
-	fmtCmdEx = `
-mmplat --test
-mmplat --test -r dir1 dir2
-mmplat --port 8080 -r --file-formats txt,json
-mmplat --log-level debug media
-`
 
 
 	cmdFlagNameLogLevel = "log"
